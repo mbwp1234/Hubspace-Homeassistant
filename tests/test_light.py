@@ -946,12 +946,11 @@ async def test_brightness_preset_entities(mocked_tree):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize(
-    ("brightness", "expected"), [(255, "high"), (128, "medium"), (3, "low")]
-)
-async def test_turn_on_brightness_preset(mocked_tree, brightness, expected):
-    """A brightness request snaps to the preset band that contains it."""
+@pytest.mark.parametrize(("brightness", "pct"), [(255, 100), (128, 50), (3, 1)])
+async def test_turn_on_brightness_raw(mocked_tree, brightness, pct):
+    """Any 1-100 level is written to the device's own brightness attribute."""
     hass, _, bridge = mocked_tree
+    bridge.request.reset_mock()
     await hass.services.async_call(
         "light",
         "turn_on",
@@ -960,9 +959,25 @@ async def test_turn_on_brightness_preset(mocked_tree, brightness, expected):
     )
     await bridge.async_block_until_done()
     await hass.async_block_till_done()
-    tree = bridge.lights[holiday_tree.id]
-    assert tree.selects[light.BRIGHTNESS_PRESETS].selected == expected
-    assert tree.on.on is True
+    writes = [
+        c
+        for c in bridge.request.call_args_list
+        if c.args[0] == "POST" and c.args[1].endswith("/requests")
+    ]
+    assert len(writes) == 1
+    assert writes[0].kwargs["json"] == [
+        {"type": "attribute_write", "attrId": 2, "value": str(pct)}
+    ]
+    assert f"/devices/{holiday_tree.device_id}/requests" in writes[0].args[1]
+    assert bridge.lights[holiday_tree.id].on.on is True
+    state = hass.states.get(holiday_tree_light_id)
+    assert state.attributes[ATTR_BRIGHTNESS] == light.value_to_brightness((1, 100), pct)
+
+
+@pytest.mark.parametrize(("pct", "band"), [(1, 33), (33, 33), (34, 66), (100, 100)])
+def test_plband(pct, band):
+    """A raw level maps back to the preset band it falls in."""
+    assert light.plband(pct) == band
 
 
 @pytest.mark.asyncio

@@ -1,6 +1,7 @@
 """Home Assistant entity for interacting with Afero Light."""
 
 from functools import partial
+import time
 
 from aioafero import EventType
 from aioafero.v1 import AferoBridgeV1, LightController
@@ -21,6 +22,7 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util.color import brightness_to_value, value_to_brightness
 
+from . import raw_brightness
 from .bridge import HubspaceBridge
 from .const import DOMAIN
 from .entity import HubspaceBaseEntity
@@ -58,6 +60,11 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             instance=channel if channel is not None else False,
         )
         self._channel = channel
+        # Fork-only: the last raw 1-100 brightness written or read, for
+        # preset-only lights whose semantics state is unknown between presets.
+        self._raw_pct: int | None = None
+        self._raw_read_at = 0.0
+        self._raw_written_at = 0.0
         self._supported_features: LightEntityFeature = LightEntityFeature(0)
         supported_color_modes = {ColorMode.ONOFF}
         if self._supports_rgb():
@@ -112,6 +119,14 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             return None
         if (preset := self._brightness_preset()) is not None:
             pct = PRESET_PCT.get(str(preset.selected))
+            # Our own write wins for a minute: the cloud still reports the old
+            # preset until its next update. After that, a preset that disagrees
+            # with the raw level means someone used the app, so it wins.
+            recent = time.monotonic() - self._raw_written_at < 60
+            if self._raw_pct is not None and (
+                pct is None or recent or plband(self._raw_pct) == pct
+            ):
+                pct = self._raw_pct
         else:
             pct = displayed_brightness_pct(self.resource, channel=self._channel)
         if pct is None:
@@ -252,9 +267,15 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             color_mode = "color" if self._channel == "color" else "white"
         if color_mode == NIGHT_LIGHT_MODE:
             brightness = None
-        selects = None
         if brightness is not None and self._brightness_preset() is not None:
-            selects = {BRIGHTNESS_PRESETS: preset_for_pct(brightness)}
+            # The full 1-100 range, written to the device's own attribute.
+            self._raw_pct = max(1, min(100, int(brightness)))
+            self._raw_read_at = self._raw_written_at = time.monotonic()
+            await raw_brightness.write_brightness(
+                self.bridge.api,
+                self.resource.device_information.parent_id,
+                self._raw_pct,
+            )
             brightness = None
         await self.bridge.async_request_call(
             self.controller.set_state,
@@ -266,8 +287,38 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             color_mode=color_mode,
             effect=effect,
             channel=self._channel,
-            **({"selects": selects} if selects else {}),
         )
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self) -> None:
+        """Subscribe, and learn a preset-only light's real level once."""
+        await super().async_added_to_hass()
+        self._schedule_raw_read()
+
+    @callback
+    def on_update(self) -> None:
+        """Refresh the raw level when the semantics layer cannot say it."""
+        self._schedule_raw_read()
+
+    @callback
+    def _schedule_raw_read(self) -> None:
+        preset = self._brightness_preset()
+        if preset is None or self.hass is None:
+            return
+        if PRESET_PCT.get(str(preset.selected)) is not None and self._raw_pct is None:
+            return
+        if time.monotonic() - self._raw_read_at < 30:
+            return
+        self._raw_read_at = time.monotonic()
+        self.hass.async_create_task(self._read_raw())
+
+    async def _read_raw(self) -> None:
+        pct = await raw_brightness.read_brightness(
+            self.bridge.api, self.resource.device_information.parent_id
+        )
+        if pct is not None and pct != self._raw_pct:
+            self._raw_pct = pct
+            self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs) -> None:
         """Turn device off."""
@@ -277,6 +328,11 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             on=False,
             channel=self._channel,
         )
+
+
+def plband(pct: int) -> int:
+    """Return the preset percent whose band contains ``pct``."""
+    return PRESET_PCT[preset_for_pct(pct)]
 
 
 def preset_for_pct(pct: int) -> str:
