@@ -35,3 +35,21 @@ send_command:
       description: functionInstance you want to send
       required: false
       example: "primary"
+
+afero_request:
+  description: Fork-only diagnostic. One signed request to the raw Afero API for the logged-in account.
+  fields:
+    path:
+      description: Path under /v1/accounts/{account}/
+      required: true
+      example: "/v1/accounts/{account}/deviceProfiles/<profile-id>"
+    method:
+      description: GET or POST
+      required: false
+      example: "GET"
+    body:
+      description: JSON body for POST
+      required: false
+    account:
+      description: Username, if more than one Hubspace account
+      required: false

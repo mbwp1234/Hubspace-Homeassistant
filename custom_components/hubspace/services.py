@@ -2,11 +2,19 @@
 
 import asyncio
 from importlib.metadata import version
+import json
 import logging
 from typing import Final
 
+from aiohttp import web_exceptions
 from homeassistant.const import CONF_USERNAME
-from homeassistant.core import HomeAssistant, ServiceCall
+from homeassistant.core import (
+    HomeAssistant,
+    ServiceCall,
+    ServiceResponse,
+    SupportsResponse,
+)
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_registry as er
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.service import verify_domain_control
@@ -26,6 +34,9 @@ SERVICE_SEND_COMMAND_FUNC_CLASS: Final[str] = "function_class"
 SERVICE_SEND_COMMAND_FUNC_INSTANCE: Final[str] = "function_instance"
 SERVICE_SEND_COMMAND_VALUE: Final[str] = "value"
 SERVICE_SEND_COMMAND_ACCOUNT: Final[str] = "account"
+# Fork-only diagnostic: a signed request to the raw Afero device API, scoped to
+# the logged-in account. Never proposed upstream.
+SERVICE_AFERO_REQUEST = "afero_request"
 
 LOGGER = logging.getLogger(__name__)
 
@@ -77,6 +88,37 @@ async def send_command(call: ServiceCall) -> None:
     await asyncio.gather(*tasks)
 
 
+async def afero_request(call: ServiceCall) -> ServiceResponse:
+    """Send one signed request to the raw Afero API for the logged-in account.
+
+    The path must sit under /v1/accounts/{account}/; "{account}" is replaced
+    with the account id. Only GET and POST are allowed.
+    """
+    bridge = await find_bridge(call.hass, call.data.get(SERVICE_SEND_COMMAND_ACCOUNT))
+    if not bridge:
+        raise HomeAssistantError("No Hubspace bridge")
+    api = bridge.api
+    path = call.data["path"].replace("{account}", str(api.account_id))
+    if not path.startswith(f"/v1/accounts/{api.account_id}/"):
+        raise HomeAssistantError("path must start with /v1/accounts/{account}/")
+    kwargs = {}
+    if call.data.get("body") is not None:
+        kwargs["json"] = call.data["body"]
+        kwargs["headers"] = {"content-type": "application/json; charset=utf-8"}
+    try:
+        res = await api.request(
+            call.data.get("method", "GET"), api.generate_api_url(path), **kwargs
+        )
+    except web_exceptions.HTTPForbidden:
+        return {"status": 403, "body": None}
+    text = await res.text()
+    try:
+        body = json.loads(text)
+    except ValueError:
+        body = text
+    return {"status": res.status, "body": body}
+
+
 def async_register_services(hass: HomeAssistant) -> None:
     """Register services for Hubspace integration.
 
@@ -105,6 +147,21 @@ def async_register_services(hass: HomeAssistant) -> None:
                     vol.Optional(SERVICE_SEND_COMMAND_ACCOUNT): optional,
                 }
             ),
+        )
+    if not hass.services.has_service(DOMAIN, SERVICE_AFERO_REQUEST):
+        hass.services.async_register(
+            DOMAIN,
+            SERVICE_AFERO_REQUEST,
+            verify_domain_control(*args)(afero_request),
+            schema=vol.Schema(
+                {
+                    vol.Required("path"): cv.string,
+                    vol.Optional("method", default="GET"): vol.In(["GET", "POST"]),
+                    vol.Optional("body"): vol.Any(list, dict),
+                    vol.Optional(SERVICE_SEND_COMMAND_ACCOUNT): optional,
+                }
+            ),
+            supports_response=SupportsResponse.ONLY,
         )
 
 
