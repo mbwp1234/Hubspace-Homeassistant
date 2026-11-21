@@ -29,6 +29,12 @@ NIGHT_LIGHT_MODE = "night-light"
 # HA effect label — distinct from sequence effect names such as ``nightlight``.
 NIGHT_LIGHT_EFFECT = "Night Light Mode"
 
+# Lights with no ``brightness`` function but a Low / Medium / High category.
+BRIGHTNESS_PRESETS = ("brightness-presets", None)
+# Percent each preset reports, and the upper bound of the band it covers
+# (the device's own ranges: low 1-33, medium 34-66, high 67-100).
+PRESET_PCT = {"low": 33, "medium": 66, "high": 100}
+
 
 class HubspaceLight(HubspaceBaseEntity, LightEntity):
     """Representation of an Afero light."""
@@ -66,14 +72,24 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             # Trim-style zones: API warm white via color-mode white (no CCT slider).
             # HA requires RGB alongside WHITE in supported_color_modes.
             supported_color_modes.add(ColorMode.WHITE)
-        if self.resource.supports_dimming or (
-            self._channel
-            and self.resource.channel_brightness(self._channel) is not None
+        if (
+            self.resource.supports_dimming
+            or (
+                self._channel
+                and self.resource.channel_brightness(self._channel) is not None
+            )
+            or self._brightness_preset() is not None
         ):
             supported_color_modes.add(ColorMode.BRIGHTNESS)
         self._attr_supported_color_modes = filter_supported_color_modes(
             supported_color_modes
         )
+
+    def _brightness_preset(self):
+        """Return the brightness-presets select for preset-only lights."""
+        if self._channel is not None or self.resource.supports_dimming:
+            return None
+        return (self.resource.selects or {}).get(BRIGHTNESS_PRESETS)
 
     def _supports_rgb(self) -> bool:
         if self._channel == "white":
@@ -94,7 +110,10 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             and self.resource.color_mode.mode == NIGHT_LIGHT_MODE
         ):
             return None
-        pct = displayed_brightness_pct(self.resource, channel=self._channel)
+        if (preset := self._brightness_preset()) is not None:
+            pct = PRESET_PCT.get(str(preset.selected))
+        else:
+            pct = displayed_brightness_pct(self.resource, channel=self._channel)
         if pct is None:
             return None
         return value_to_brightness((1, 100), pct)
@@ -233,6 +252,10 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             color_mode = "color" if self._channel == "color" else "white"
         if color_mode == NIGHT_LIGHT_MODE:
             brightness = None
+        selects = None
+        if brightness is not None and self._brightness_preset() is not None:
+            selects = {BRIGHTNESS_PRESETS: preset_for_pct(brightness)}
+            brightness = None
         await self.bridge.async_request_call(
             self.controller.set_state,
             device_id=self.resource.id,
@@ -243,6 +266,7 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             color_mode=color_mode,
             effect=effect,
             channel=self._channel,
+            **({"selects": selects} if selects else {}),
         )
 
     async def async_turn_off(self, **kwargs) -> None:
@@ -253,6 +277,14 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
             on=False,
             channel=self._channel,
         )
+
+
+def preset_for_pct(pct: int) -> str:
+    """Return the brightness preset whose band contains ``pct``."""
+    for name, upper in sorted(PRESET_PCT.items(), key=lambda item: item[1]):
+        if pct <= upper:
+            return name
+    return "high"
 
 
 def has_night_light_mode(resource: Light) -> bool:

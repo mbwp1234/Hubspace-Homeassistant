@@ -9,6 +9,7 @@ from homeassistant.const import CONF_PASSWORD, CONF_TIMEOUT, CONF_USERNAME
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import aiohttp_client, device_registry as dr
 
+from . import afero_compat
 from .bridge import HubspaceBridge
 from .const import (
     CONF_CLIENT,
@@ -23,6 +24,9 @@ from .const import (
 from .services import async_register_services
 
 _LOGGER = logging.getLogger(__name__)
+
+# Light selects (brightness presets) until the pinned aioafero ships them.
+afero_compat.apply()
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

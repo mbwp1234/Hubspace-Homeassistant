@@ -12,7 +12,7 @@ from homeassistant.components.light import (
 from homeassistant.helpers import entity_registry as er
 import pytest
 
-from custom_components.hubspace import light
+from custom_components.hubspace import afero_compat, light
 
 from .utils import create_devices_from_data, hs_raw_from_dump
 
@@ -892,3 +892,97 @@ async def test_turn_off_all_does_not_turn_penrose_back_on(mocked_penrose, mocker
     assert sent.call_count == 1
     assert sent.call_args.kwargs["on"] is False
     assert sent.call_args.kwargs.get("color_mode") is None
+
+
+holiday_tree = create_devices_from_data("light-holiday-tree.json")[0]
+holiday_tree_light_id = "light.christmas_tree"
+holiday_tree_select_id = "select.christmas_tree_brightness_preset"
+holiday_tree_timer_id = "number.christmas_tree_power_off_timer"
+
+
+@pytest.fixture
+async def mocked_tree(mocked_entry):
+    """Initialize a preset-only light (no brightness function)."""
+    hass, entry, bridge = mocked_entry
+    await bridge.generate_devices_from_data([holiday_tree])
+    await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
+    yield hass, entry, bridge
+    await bridge.close()
+
+
+@pytest.mark.parametrize(
+    ("pct", "expected"),
+    [
+        (1, "low"),
+        (33, "low"),
+        (34, "medium"),
+        (66, "medium"),
+        (67, "high"),
+        (100, "high"),
+        (101, "high"),
+    ],
+)
+def test_preset_for_pct(pct, expected):
+    """Each percent lands in the preset band the device defines."""
+    assert light.preset_for_pct(pct) == expected
+
+
+@pytest.mark.asyncio
+async def test_brightness_preset_entities(mocked_tree):
+    """Presets read back as brightness, a select, and an off timer number."""
+    hass, _, _ = mocked_tree
+    entity = hass.states.get(holiday_tree_light_id)
+    assert entity.state == "on"
+    assert entity.attributes["supported_color_modes"] == [ColorMode.BRIGHTNESS]
+    assert entity.attributes[ATTR_COLOR_MODE] == ColorMode.BRIGHTNESS
+    assert entity.attributes[ATTR_BRIGHTNESS] == 84  # low = 33%
+    select = hass.states.get(holiday_tree_select_id)
+    assert select.state == "low"
+    assert select.attributes["options"] == ["high", "low", "medium"]
+    timer = hass.states.get(holiday_tree_timer_id)
+    assert float(timer.state) == 0
+    assert timer.attributes["max"] == 1440
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("brightness", "expected"), [(255, "high"), (128, "medium"), (3, "low")]
+)
+async def test_turn_on_brightness_preset(mocked_tree, brightness, expected):
+    """A brightness request snaps to the preset band that contains it."""
+    hass, _, bridge = mocked_tree
+    await hass.services.async_call(
+        "light",
+        "turn_on",
+        {"entity_id": holiday_tree_light_id, ATTR_BRIGHTNESS: brightness},
+        blocking=True,
+    )
+    await bridge.async_block_until_done()
+    await hass.async_block_till_done()
+    tree = bridge.lights[holiday_tree.id]
+    assert tree.selects[light.BRIGHTNESS_PRESETS].selected == expected
+    assert tree.on.on is True
+
+
+@pytest.mark.asyncio
+async def test_select_brightness_preset(mocked_tree):
+    """The select alone sends the preset without touching power."""
+    hass, _, bridge = mocked_tree
+    await hass.services.async_call(
+        "select",
+        "select_option",
+        {"entity_id": holiday_tree_select_id, "option": "medium"},
+        blocking=True,
+    )
+    await bridge.async_block_until_done()
+    await hass.async_block_till_done()
+    assert (
+        bridge.lights[holiday_tree.id].selects[light.BRIGHTNESS_PRESETS].selected
+        == "medium"
+    )
+
+
+def test_afero_compat_is_idempotent():
+    """The backport applies once, at import, and never stacks."""
+    assert afero_compat.apply() is False

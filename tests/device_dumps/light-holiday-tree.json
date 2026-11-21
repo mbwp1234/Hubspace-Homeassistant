@@ -1,0 +1,984 @@
+[
+  {
+    "id": "fc505a68-2663-4ed6-a06a-969ca6ae1b04",
+    "device_id": "6d11aed5-1a48-493c-84dd-ae6539a232f3",
+    "model": "26LE31013, 26LE31014, 26LE31015, 26LE31016, 26LE31017, 26LE31018, 26LE31019, 26LE31020, 26LE31021",
+    "device_class": "light",
+    "default_name": "Grand Duchess Christmas Tree",
+    "default_image": "ledup-grand-duchess-christmas-tree-icon",
+    "friendly_name": "Christmas Tree",
+    "capabilities": [
+      {
+        "functionClass": "available",
+        "type": "boolean",
+        "schedulable": null,
+        "functionInstance": null,
+        "_opts": {}
+      },
+      {
+        "functionClass": "visible",
+        "type": "boolean",
+        "schedulable": null,
+        "functionInstance": null,
+        "_opts": {}
+      },
+      {
+        "functionClass": "direct",
+        "type": "boolean",
+        "schedulable": null,
+        "functionInstance": null,
+        "_opts": {}
+      },
+      {
+        "functionClass": "power-on-timer-mcu",
+        "type": "numeric",
+        "schedulable": false,
+        "functionInstance": null,
+        "_opts": {
+          "range": {
+            "min": 0,
+            "max": 1080,
+            "step": 1080
+          }
+        }
+      },
+      {
+        "functionClass": "restore-values",
+        "type": "category",
+        "schedulable": false,
+        "functionInstance": null,
+        "_opts": {
+          "values": [
+            "partial-restore",
+            "not-restored",
+            "restored"
+          ],
+          "categoryValues": [
+            {
+              "name": "partial-restore",
+              "values": [
+                "2"
+              ]
+            },
+            {
+              "name": "not-restored",
+              "values": [
+                "0"
+              ]
+            },
+            {
+              "name": "restored",
+              "values": [
+                "1"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "functionClass": "power-off-timer",
+        "type": "numeric",
+        "schedulable": true,
+        "functionInstance": null,
+        "_opts": {
+          "range": {
+            "min": 0,
+            "max": 1440,
+            "step": 1
+          }
+        }
+      },
+      {
+        "functionClass": "schedule-pause",
+        "type": "category",
+        "schedulable": false,
+        "functionInstance": "active",
+        "_opts": {
+          "values": [
+            "off",
+            "on"
+          ],
+          "categoryValues": [
+            {
+              "name": "off",
+              "values": [
+                "0"
+              ]
+            },
+            {
+              "name": "on",
+              "values": [
+                "1"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "functionClass": "color-sequence",
+        "type": "category",
+        "schedulable": true,
+        "functionInstance": "preset",
+        "_opts": {
+          "values": [
+            "slow-flip-mcu",
+            "slow-fade-warm-white-mcu",
+            "fast-flip-mcu",
+            "demo-mcu",
+            "twinkle-warm-white-mcu",
+            "slow-fade-mcu",
+            "slow-color-variable-mcu",
+            "steady-warm-white-mcu",
+            "steady-multi-mcu",
+            "slow-fade-multi-mcu"
+          ],
+          "categoryValues": [
+            {
+              "name": "slow-flip-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20008"
+              ]
+            },
+            {
+              "name": "slow-fade-warm-white-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20004"
+              ]
+            },
+            {
+              "name": "fast-flip-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20007"
+              ]
+            },
+            {
+              "name": "demo-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20010"
+              ]
+            },
+            {
+              "name": "twinkle-warm-white-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20003"
+              ]
+            },
+            {
+              "name": "slow-fade-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20009"
+              ]
+            },
+            {
+              "name": "slow-color-variable-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20006"
+              ]
+            },
+            {
+              "name": "steady-warm-white-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20001"
+              ]
+            },
+            {
+              "name": "steady-multi-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20002"
+              ]
+            },
+            {
+              "name": "slow-fade-multi-mcu",
+              "hints": [
+                "WinterHolidays"
+              ],
+              "values": [
+                "20005"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "functionClass": "schedule-pause",
+        "type": "object",
+        "schedulable": false,
+        "functionInstance": null,
+        "_opts": {}
+      },
+      {
+        "functionClass": "color-mode",
+        "type": "category",
+        "schedulable": true,
+        "functionInstance": null,
+        "_opts": {
+          "values": [
+            "sequence"
+          ],
+          "categoryValues": [
+            {
+              "name": "sequence",
+              "values": [
+                "2"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "functionClass": "power-off-timer-mcu",
+        "type": "numeric",
+        "schedulable": false,
+        "functionInstance": null,
+        "_opts": {
+          "range": {
+            "min": 0,
+            "max": 360,
+            "step": 360
+          }
+        }
+      },
+      {
+        "functionClass": "brightness-presets",
+        "type": "category",
+        "schedulable": true,
+        "functionInstance": null,
+        "_opts": {
+          "values": [
+            "medium",
+            "high",
+            "low"
+          ],
+          "categoryValues": [
+            {
+              "name": "medium",
+              "values": [
+                "66"
+              ]
+            },
+            {
+              "name": "high",
+              "values": [
+                "100"
+              ]
+            },
+            {
+              "name": "low",
+              "values": [
+                "33"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "functionClass": "power",
+        "type": "category",
+        "schedulable": true,
+        "functionInstance": null,
+        "_opts": {
+          "values": [
+            "off",
+            "on"
+          ],
+          "categoryValues": [
+            {
+              "name": "off",
+              "values": [
+                "0"
+              ]
+            },
+            {
+              "name": "on",
+              "values": [
+                "1"
+              ]
+            }
+          ]
+        }
+      }
+    ],
+    "functions": [
+      {
+        "id": "bcaea655-ccbe-41c7-8064-ddfcaaf32ec3",
+        "createdTimestampMs": 1766003282132,
+        "updatedTimestampMs": 1766003282132,
+        "functionClass": "power-on-timer-mcu",
+        "type": "numeric",
+        "schedulable": false,
+        "values": [
+          {
+            "id": "c8285c3e-d6a5-4be2-b0b5-3eafed678023",
+            "createdTimestampMs": 1766003282149,
+            "updatedTimestampMs": 1766003282149,
+            "name": "timer",
+            "deviceValues": [
+              {
+                "id": "61357105-bda5-445b-b3bb-8340096d88bd",
+                "createdTimestampMs": 1766003282167,
+                "updatedTimestampMs": 1766003282167,
+                "type": "attribute",
+                "key": "61"
+              }
+            ],
+            "range": {
+              "min": 0,
+              "max": 1080,
+              "step": 1080
+            }
+          }
+        ]
+      },
+      {
+        "id": "589c548c-2b26-439a-b26f-263464790de7",
+        "createdTimestampMs": 1766003282179,
+        "updatedTimestampMs": 1766003282179,
+        "functionClass": "restore-values",
+        "type": "category",
+        "schedulable": false,
+        "values": [
+          {
+            "id": "9b1b3896-7803-4157-810e-bdc475f4a334",
+            "createdTimestampMs": 1766003282257,
+            "updatedTimestampMs": 1766003282257,
+            "name": "partial-restore",
+            "deviceValues": [
+              {
+                "id": "98627791-d2bf-41cd-8884-b7f7c2c280a1",
+                "createdTimestampMs": 1766003282275,
+                "updatedTimestampMs": 1766003282275,
+                "type": "attribute",
+                "key": "100",
+                "value": "2"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "c8b220e3-d85b-4e0b-a3d9-582a53b63c6b",
+            "createdTimestampMs": 1766003282198,
+            "updatedTimestampMs": 1766003282198,
+            "name": "not-restored",
+            "deviceValues": [
+              {
+                "id": "8d986eb6-fc74-46e3-a79e-d5b9dcc0349d",
+                "createdTimestampMs": 1766003282215,
+                "updatedTimestampMs": 1766003282215,
+                "type": "attribute",
+                "key": "100",
+                "value": "0"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "f5bd0702-8508-4c95-b9b6-19dbcc7aa8fd",
+            "createdTimestampMs": 1766003282227,
+            "updatedTimestampMs": 1766003282227,
+            "name": "restored",
+            "deviceValues": [
+              {
+                "id": "52e40b73-e8e6-4a00-884f-1febb5514696",
+                "createdTimestampMs": 1766003282244,
+                "updatedTimestampMs": 1766003282244,
+                "type": "attribute",
+                "key": "100",
+                "value": "1"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      },
+      {
+        "id": "e42752f7-0687-4b2d-8775-921ea78f3d3b",
+        "createdTimestampMs": 1766003282038,
+        "updatedTimestampMs": 1766003282038,
+        "functionClass": "power-off-timer",
+        "type": "numeric",
+        "schedulable": true,
+        "values": [
+          {
+            "id": "0425ff02-5dfc-460f-b799-9ecde00c5ecc",
+            "createdTimestampMs": 1766003282055,
+            "updatedTimestampMs": 1766003282055,
+            "name": "timer",
+            "deviceValues": [
+              {
+                "id": "5e182987-7b38-47c9-bab4-ef5b7a07f539",
+                "createdTimestampMs": 1766003282073,
+                "updatedTimestampMs": 1766003282073,
+                "type": "attribute",
+                "key": "51"
+              }
+            ],
+            "range": {
+              "min": 0,
+              "max": 1440,
+              "step": 1
+            }
+          }
+        ]
+      },
+      {
+        "id": "2b13baeb-3e64-46c3-8da7-fb1c9fa4c35d",
+        "createdTimestampMs": 1766003282287,
+        "updatedTimestampMs": 1766003282287,
+        "functionClass": "schedule-pause",
+        "functionInstance": "active",
+        "type": "category",
+        "schedulable": false,
+        "values": [
+          {
+            "id": "ee36a5cc-6554-4c25-b2d5-c8cc547a5be0",
+            "createdTimestampMs": 1766003282304,
+            "updatedTimestampMs": 1766003282304,
+            "name": "off",
+            "deviceValues": [
+              {
+                "id": "e7f60ba5-8933-432f-b418-b4f6298e06bd",
+                "createdTimestampMs": 1766003282321,
+                "updatedTimestampMs": 1766003282321,
+                "type": "attribute",
+                "key": "49998",
+                "value": "0"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "146ae53b-18cb-4e15-9d0a-c16e894fe642",
+            "createdTimestampMs": 1766003282334,
+            "updatedTimestampMs": 1766003282334,
+            "name": "on",
+            "deviceValues": [
+              {
+                "id": "ab90cc0f-f2c9-4ce2-b457-c1e7537bd34b",
+                "createdTimestampMs": 1766003282353,
+                "updatedTimestampMs": 1766003282353,
+                "type": "attribute",
+                "key": "49998",
+                "value": "1"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      },
+      {
+        "id": "9c4d28d5-e5d4-47fa-8f11-bc9c39fa28bd",
+        "createdTimestampMs": 1766003281665,
+        "updatedTimestampMs": 1766003281665,
+        "functionClass": "color-sequence",
+        "functionInstance": "preset",
+        "type": "category",
+        "schedulable": true,
+        "values": [
+          {
+            "id": "bd771ff4-cd7b-4f66-a3f0-2a31f2791d9c",
+            "createdTimestampMs": 1766003281946,
+            "updatedTimestampMs": 1766003281946,
+            "name": "slow-flip-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "36a5c687-38cd-4611-8a80-84f3f1709826",
+                "createdTimestampMs": 1766003281964,
+                "updatedTimestampMs": 1766003281964,
+                "type": "attribute",
+                "key": "6",
+                "value": "20008"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "3effd243-51f0-4937-a0c5-244b7b118740",
+            "createdTimestampMs": 1766003281768,
+            "updatedTimestampMs": 1766003281768,
+            "name": "slow-fade-warm-white-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "38c8e7ba-69c0-4942-93ab-cf8d1ef9d6b4",
+                "createdTimestampMs": 1766003281785,
+                "updatedTimestampMs": 1766003281785,
+                "type": "attribute",
+                "key": "6",
+                "value": "20004"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "23ce0516-1a8a-462a-9c60-93137b5ecd83",
+            "createdTimestampMs": 1766003281915,
+            "updatedTimestampMs": 1766003281915,
+            "name": "fast-flip-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "7013a956-33dd-4db6-99ec-b7c7ed99ada6",
+                "createdTimestampMs": 1766003281934,
+                "updatedTimestampMs": 1766003281934,
+                "type": "attribute",
+                "key": "6",
+                "value": "20007"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "6fe2a4a2-2c47-4a74-8283-59677e370c8c",
+            "createdTimestampMs": 1766003282008,
+            "updatedTimestampMs": 1766003282008,
+            "name": "demo-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "878ea9dc-9cfc-4c7a-98aa-2ca394590725",
+                "createdTimestampMs": 1766003282026,
+                "updatedTimestampMs": 1766003282026,
+                "type": "attribute",
+                "key": "6",
+                "value": "20010"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "f70c2cf7-c9fc-4007-8a51-125cfc3efa85",
+            "createdTimestampMs": 1766003281740,
+            "updatedTimestampMs": 1766003281740,
+            "name": "twinkle-warm-white-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "4533cc51-03d2-4c28-a488-e8eccca5570f",
+                "createdTimestampMs": 1766003281757,
+                "updatedTimestampMs": 1766003281757,
+                "type": "attribute",
+                "key": "6",
+                "value": "20003"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "83af1761-591a-40d3-8ee8-ff5972edc833",
+            "createdTimestampMs": 1766003281977,
+            "updatedTimestampMs": 1766003281977,
+            "name": "slow-fade-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "dd1dba73-92b7-475a-8f0c-a9d398f5f935",
+                "createdTimestampMs": 1766003281995,
+                "updatedTimestampMs": 1766003281995,
+                "type": "attribute",
+                "key": "6",
+                "value": "20009"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "33fafdb7-8d65-4643-b7fa-ddc04c124645",
+            "createdTimestampMs": 1766003281863,
+            "updatedTimestampMs": 1766003281863,
+            "name": "slow-color-variable-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "ce53cdd1-4063-4f4d-87bd-4bf62674d0cb",
+                "createdTimestampMs": 1766003281903,
+                "updatedTimestampMs": 1766003281903,
+                "type": "attribute",
+                "key": "6",
+                "value": "20006"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "d7f86dce-10a5-49d3-b8fe-80437e898a98",
+            "createdTimestampMs": 1766003281682,
+            "updatedTimestampMs": 1766003281682,
+            "name": "steady-warm-white-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "1cf179ec-56ea-43b0-96d9-ddf6b4795fa4",
+                "createdTimestampMs": 1766003281699,
+                "updatedTimestampMs": 1766003281699,
+                "type": "attribute",
+                "key": "6",
+                "value": "20001"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "eb7ce360-1b07-4a10-8b0d-743d4122cdac",
+            "createdTimestampMs": 1766003281711,
+            "updatedTimestampMs": 1766003281711,
+            "name": "steady-multi-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "4999e292-ec18-4416-bd74-afa5080c397d",
+                "createdTimestampMs": 1766003281728,
+                "updatedTimestampMs": 1766003281728,
+                "type": "attribute",
+                "key": "6",
+                "value": "20002"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "a7da547c-8bbc-434c-9477-e57619c97aae",
+            "createdTimestampMs": 1766003281797,
+            "updatedTimestampMs": 1766003281797,
+            "name": "slow-fade-multi-mcu",
+            "hints": [
+              "WinterHolidays"
+            ],
+            "deviceValues": [
+              {
+                "id": "ff67e02a-5556-42c1-87b1-7a4865732349",
+                "createdTimestampMs": 1766003281826,
+                "updatedTimestampMs": 1766003281826,
+                "type": "attribute",
+                "key": "6",
+                "value": "20005"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      },
+      {
+        "id": "29dd78cb-4d3c-48e5-aa99-4b23e0d0e28d",
+        "createdTimestampMs": 1766003282365,
+        "updatedTimestampMs": 1766003282365,
+        "functionClass": "schedule-pause",
+        "type": "object",
+        "schedulable": false,
+        "values": [
+          {
+            "id": "04403e01-db68-4f2e-a5df-2332fdf0bb65",
+            "createdTimestampMs": 1766003282383,
+            "updatedTimestampMs": 1766003282383,
+            "name": "schedule-pause-time",
+            "deviceValues": [
+              {
+                "id": "50fa674c-9afd-49a2-aae5-57a6a52504d0",
+                "createdTimestampMs": 1766003282401,
+                "updatedTimestampMs": 1766003282401,
+                "type": "attribute",
+                "key": "49999",
+                "format": "schedule-pause-time-array"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      },
+      {
+        "id": "4031a6ab-290b-4f2f-9fcc-b30366140ee9",
+        "createdTimestampMs": 1766003281617,
+        "updatedTimestampMs": 1766003281617,
+        "functionClass": "color-mode",
+        "type": "category",
+        "schedulable": true,
+        "values": [
+          {
+            "id": "29c8273c-b7cc-4aec-a5bd-aad73d44073a",
+            "createdTimestampMs": 1766003281635,
+            "updatedTimestampMs": 1766003281635,
+            "name": "sequence",
+            "deviceValues": [
+              {
+                "id": "f615144f-0ebb-48e9-a091-ebf9f4221f64",
+                "createdTimestampMs": 1766003281653,
+                "updatedTimestampMs": 1766003281653,
+                "type": "attribute",
+                "key": "5",
+                "value": "2"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      },
+      {
+        "id": "eddf6444-486c-40f1-9d10-24ba310cadc3",
+        "createdTimestampMs": 1766003282085,
+        "updatedTimestampMs": 1766003282085,
+        "functionClass": "power-off-timer-mcu",
+        "type": "numeric",
+        "schedulable": false,
+        "values": [
+          {
+            "id": "7c3cd874-f548-4fc5-97a8-8de829ba403f",
+            "createdTimestampMs": 1766003282103,
+            "updatedTimestampMs": 1766003282103,
+            "name": "timer",
+            "deviceValues": [
+              {
+                "id": "2b1a3ec7-36f8-40fe-bce2-04a6adaa807e",
+                "createdTimestampMs": 1766003282120,
+                "updatedTimestampMs": 1766003282120,
+                "type": "attribute",
+                "key": "60"
+              }
+            ],
+            "range": {
+              "min": 0,
+              "max": 360,
+              "step": 360
+            }
+          }
+        ]
+      },
+      {
+        "id": "063b7523-4162-4b5f-883a-e2b9c2ab1e51",
+        "createdTimestampMs": 1766003281481,
+        "updatedTimestampMs": 1766003281481,
+        "functionClass": "brightness-presets",
+        "type": "category",
+        "schedulable": true,
+        "values": [
+          {
+            "id": "038e01b7-aebc-4de4-b05a-14b962f633cf",
+            "createdTimestampMs": 1766003281560,
+            "updatedTimestampMs": 1766003281560,
+            "name": "medium",
+            "deviceValues": [
+              {
+                "id": "f92741e7-0e88-4e4f-a38e-9dcde70c863a",
+                "createdTimestampMs": 1766003281577,
+                "updatedTimestampMs": 1766003281577,
+                "type": "attribute",
+                "key": "2",
+                "expression": "34...66",
+                "value": "66"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "767a523e-07d0-48dd-b8ea-181ede34bc24",
+            "createdTimestampMs": 1766003281588,
+            "updatedTimestampMs": 1766003281588,
+            "name": "high",
+            "deviceValues": [
+              {
+                "id": "a68ba18c-47b6-44d8-a1d5-c6beed300fbd",
+                "createdTimestampMs": 1766003281605,
+                "updatedTimestampMs": 1766003281605,
+                "type": "attribute",
+                "key": "2",
+                "expression": "67...100",
+                "value": "100"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "aff69412-87fb-454c-a2c9-e08c8765a7cd",
+            "createdTimestampMs": 1766003281530,
+            "updatedTimestampMs": 1766003281530,
+            "name": "low",
+            "deviceValues": [
+              {
+                "id": "aa0e5e0e-0cce-405a-b8a2-45f22742bbd1",
+                "createdTimestampMs": 1766003281548,
+                "updatedTimestampMs": 1766003281548,
+                "type": "attribute",
+                "key": "2",
+                "expression": "1...33",
+                "value": "33"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      },
+      {
+        "id": "7a16369f-c919-496f-a8cd-a9171bd03035",
+        "createdTimestampMs": 1766003281002,
+        "updatedTimestampMs": 1766003281002,
+        "functionClass": "power",
+        "type": "category",
+        "schedulable": true,
+        "values": [
+          {
+            "id": "c38d60a7-f6fb-4b19-9ea2-617ca70a05ad",
+            "createdTimestampMs": 1766003281202,
+            "updatedTimestampMs": 1766003281202,
+            "name": "off",
+            "deviceValues": [
+              {
+                "id": "77bbef0f-54f1-4ae6-9315-d3738eb540f3",
+                "createdTimestampMs": 1766003281337,
+                "updatedTimestampMs": 1766003281337,
+                "type": "attribute",
+                "key": "1",
+                "value": "0"
+              }
+            ],
+            "range": {}
+          },
+          {
+            "id": "aad38251-a720-4389-a3f8-fde061f88be3",
+            "createdTimestampMs": 1766003281430,
+            "updatedTimestampMs": 1766003281430,
+            "name": "on",
+            "deviceValues": [
+              {
+                "id": "e42f33a6-0f37-486e-9c07-7551227a8018",
+                "createdTimestampMs": 1766003281468,
+                "updatedTimestampMs": 1766003281468,
+                "type": "attribute",
+                "key": "1",
+                "value": "1"
+              }
+            ],
+            "range": {}
+          }
+        ]
+      }
+    ],
+    "states": [
+      {
+        "functionClass": "power-on-timer-mcu",
+        "value": 0,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "restore-values",
+        "value": "partial-restore",
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "power-off-timer",
+        "value": 0,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "schedule-pause",
+        "value": "off",
+        "lastUpdateTime": 0,
+        "functionInstance": "active"
+      },
+      {
+        "functionClass": "color-sequence",
+        "value": "steady-warm-white-mcu",
+        "lastUpdateTime": 0,
+        "functionInstance": "preset"
+      },
+      {
+        "functionClass": "schedule-pause",
+        "value": null,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "color-mode",
+        "value": "sequence",
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "power-off-timer-mcu",
+        "value": 0,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "brightness-presets",
+        "value": "low",
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "power",
+        "value": "on",
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "available",
+        "value": true,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "visible",
+        "value": true,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      },
+      {
+        "functionClass": "direct",
+        "value": true,
+        "lastUpdateTime": 0,
+        "functionInstance": null
+      }
+    ],
+    "children": [],
+    "manufacturerName": "Home Decorators Collection",
+    "split": null,
+    "version_data": null
+  }
+]
