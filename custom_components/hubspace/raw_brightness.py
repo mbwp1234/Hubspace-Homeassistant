@@ -33,7 +33,11 @@ async def write_brightness(api, device_id: str, pct: int) -> None:
 
 
 async def read_brightness(api, device_id: str) -> int | None:
-    """Read attribute 2 from the device; None when it cannot be read."""
+    """Read attribute 2 from the device; None when it cannot be read.
+
+    This is the device's OUTPUT level after its own brightness curve, not the
+    value last written, so it is only used when nothing better is known.
+    """
     try:
         res = await api.request(
             "GET",

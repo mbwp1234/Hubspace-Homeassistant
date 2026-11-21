@@ -305,7 +305,14 @@ class HubspaceLight(HubspaceBaseEntity, LightEntity):
         preset = self._brightness_preset()
         if preset is None or self.hass is None:
             return
-        if PRESET_PCT.get(str(preset.selected)) is not None and self._raw_pct is None:
+        # Only when there is no level of our own. The tree runs its own
+        # brightness curve and reports its OUTPUT (20 asked reads back as 12),
+        # so re-reading after a write would walk the slider away from the
+        # value that was set.
+        if (
+            self._raw_pct is not None
+            or PRESET_PCT.get(str(preset.selected)) is not None
+        ):
             return
         if time.monotonic() - self._raw_read_at < 30:
             return
